@@ -23,7 +23,7 @@ keys_global =
     { "project_fkey_command",                     "4", "Control" },
     { "project_fkey_command",                     "5", "Control" },
     { "project_fkey_command",                     "6", "Control" },
-    { "project_fkey_command",                     "7", "Control" },
+    { "project_fkey_command",                    "7", "Control" },
     { "project_fkey_command",                     "8", "Control" },
     { "project_fkey_command",                     "9", "Control" },
     { "project_fkey_command",                     "10", "Control" },
@@ -64,7 +64,7 @@ keys_global =
 keys_file =
 {
     { "switch_to_keybinding_1", "I" },
-        
+    
     // NOTE(rjf): Q/E Arrow Keys
     { "f4_move_left",                               "A" },
     { "f4_move_left_token_boundary",                "Q", },
@@ -91,18 +91,18 @@ keys_file =
     { "search_identifier", "Semicolon" },
     { "f4_search",         "Semicolon", "Shift" },
     { "goto_line",         "Semicolon", "Alt" },
-
+    
     { "list_all_locations_of_identifier",              "F" },
     { "list_all_locations",                            "F", "Shift" },
     { "list_all_substring_locations_case_insensitive", "F", "Alt" },
-   
-/* 
+    
+    /* 
     // NOTE(rjf): Replace
     { "replace_in_range",            "A", "Control" },
     { "query_replace",               "Q", "Control" },
     { "query_replace_identifier",    "Q", "Control", "Shift" },
     { "query_replace_selection",     "Q", "Alt" },
-*/
+    */
     
     // NOTE(rjf): Clipboard
     // NOTE(jason): fix shift paste to put on new line
@@ -121,8 +121,8 @@ keys_file =
     { "undo",                        "U" },
     
     // NOTE(rjf): Meta
-    { "change_active_panel",         "Tab"                  },
-    { "swap_panels",                 "Tab", "Shift" },
+    { "change_active_panel",         "Tick"                  },
+    { "swap_panels",                 "Tick", "Alt" },
     { "if_read_only_goto_position",  "Return" },
     { "if_read_only_goto_position_same_panel", "Return", "Shift" },
     

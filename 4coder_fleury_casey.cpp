@@ -8,19 +8,19 @@ CUSTOM_DOC("He used to cut my grass... he was a very nice boy!")
     F4_RequireWAV(app, &PowerWAV, "sounds/hit.wav");
     PowerWAV.channel_volume[0] = 0.5f;
     PowerWAV.channel_volume[1] = 0.25f;
-	if(!def_audio_is_playing(&PowerWAVControl))
-	{
+    if(!def_audio_is_playing(&PowerWAVControl))
+    {
         def_audio_play_clip(PowerWAV, &PowerWAVControl);
-	}
+    }
 }
 
 CUSTOM_COMMAND_SIG(casey_demo_audio_switch_panel)
 CUSTOM_DOC("The white zone is for loading and unloading only...")
 {
     f32 Temp = PowerWAVControl.channel_volume[0];
-	PowerWAVControl.channel_volume[0] = PowerWAVControl.channel_volume[1];
+    PowerWAVControl.channel_volume[0] = PowerWAVControl.channel_volume[1];
     PowerWAVControl.channel_volume[1] = Temp;
-	change_active_panel(app);
+    change_active_panel(app);
 }
 
 CUSTOM_COMMAND_SIG(casey_demo_audio_one_shot)
@@ -42,9 +42,9 @@ CUSTOM_DOC("Goes to the beginning of the line and indents the line with default 
 CUSTOM_COMMAND_SIG(casey_clean_file_and_save)
 CUSTOM_DOC("Standardizes line endings and tabs, then saves the active buffer.")
 {
-	View_ID view = get_active_view(app, Access_ReadWriteVisible);
+    View_ID view = get_active_view(app, Access_ReadWriteVisible);
     Buffer_ID buffer = view_get_buffer(app, view, Access_ReadWriteVisible);
-	clean_all_lines_buffer(app, buffer, CleanAllLinesMode_RemoveBlankLines);
+    clean_all_lines_buffer(app, buffer, CleanAllLinesMode_RemoveBlankLines);
     rewrite_lines_to_lf(app, buffer);
     
     save(app);
@@ -53,7 +53,7 @@ CUSTOM_DOC("Standardizes line endings and tabs, then saves the active buffer.")
 CUSTOM_COMMAND_SIG(casey_switch_to_keybinding_0)
 CUSTOM_DOC("WENSLEYDALE.")
 {
-	switch_to_keybinding_0(app);
+    switch_to_keybinding_0(app);
 	global_hide_region_boundary = true;
 }
 
