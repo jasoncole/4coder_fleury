@@ -54,10 +54,12 @@ F4_ImplicitMap(Application_Links *app, String_ID lang, String_ID mode, Input_Eve
 	}
 	
 	Command_Binding binding = map_get_binding_recursive(&framework_mapping, map_id, event);
+    /*
 	if(!binding.custom)
 	{
 		binding = map_get_binding_recursive(&framework_mapping, orig_id, event);
 	}
+    */
     
     // TODO(allen): map_id <-> map name?
     result.map = 0;
@@ -76,10 +78,10 @@ F4_SetAbsolutelyNecessaryBindings(Mapping *mapping)
     String_ID file_map_id = vars_save_string_lit("keys_file");
     String_ID code_map_id = vars_save_string_lit("keys_code");
     
-	String_ID global_command_map_id = vars_save_string_lit("keys_global_1");
-	String_ID file_command_map_id = vars_save_string_lit("keys_file_1");
-    String_ID code_command_map_id = vars_save_string_lit("keys_code_1");
-    
+	String_ID global_insert_map_id = vars_save_string_lit("keys_global_1");
+	String_ID file_insert_map_id = vars_save_string_lit("keys_file_1");
+    String_ID code_insert_map_id = vars_save_string_lit("keys_code_1");
+
 	implicit_map_function = F4_ImplicitMap;
 	
 	MappingScope();
@@ -88,39 +90,36 @@ F4_SetAbsolutelyNecessaryBindings(Mapping *mapping)
     SelectMap(global_map_id);
     BindCore(fleury_startup, CoreCode_Startup);
     BindCore(default_try_exit, CoreCode_TryExit);
-    Bind(exit_4coder,          KeyCode_F4, KeyCode_Alt);
     BindMouseWheel(mouse_wheel_scroll);
     BindMouseWheel(mouse_wheel_change_face_size, KeyCode_Control);
-    
+
     SelectMap(file_map_id);
     ParentMap(global_map_id);
-    BindTextInput(fleury_write_text_input);
     BindMouse(click_set_cursor_and_mark, MouseCode_Left);
     BindMouseRelease(click_set_cursor, MouseCode_Left);
     BindCore(click_set_cursor_and_mark, CoreCode_ClickActivateView);
     BindMouseMove(click_set_cursor_if_lbutton);
-    
+
     SelectMap(code_map_id);
     ParentMap(file_map_id);
+   
+    SelectMap(global_insert_map_id);
+    ParentMap(global_map_id);
+    GlobalCommandMapReroute[0].From = global_map_id;
+    GlobalCommandMapReroute[0].To = global_insert_map_id;
+    
+    SelectMap(file_insert_map_id);
+    ParentMap(global_map_id);
+    GlobalCommandMapReroute[1].From = file_map_id;
+    GlobalCommandMapReroute[1].To = file_insert_map_id;
+    BindTextInput(fleury_write_text_input);
+    
+    SelectMap(code_insert_map_id);
+    ParentMap(file_insert_map_id);
+    GlobalCommandMapReroute[2].From = code_map_id;
+    GlobalCommandMapReroute[2].To = code_insert_map_id;
     BindTextInput(fleury_write_text_and_auto_indent);
-    BindMouse(f4_lego_click_store_token_1, MouseCode_Right);
-    BindMouse(f4_lego_click_store_token_2, MouseCode_Middle);
-    
-    SelectMap(global_command_map_id);
-	ParentMap(global_map_id);
-	GlobalCommandMapReroute[0].From = global_map_id;
-	GlobalCommandMapReroute[0].To = global_command_map_id;
-	
-    SelectMap(file_command_map_id);
-	ParentMap(global_command_map_id);
-	GlobalCommandMapReroute[1].From = file_map_id;
-	GlobalCommandMapReroute[1].To = file_command_map_id;
-	
-    SelectMap(code_command_map_id);
-	ParentMap(file_command_map_id);
-	GlobalCommandMapReroute[2].From = code_map_id;
-	GlobalCommandMapReroute[2].To = code_command_map_id;
-    
+   
 }
 
 function void
