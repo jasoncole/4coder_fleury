@@ -86,6 +86,9 @@ default_flags_bat = "-FC -GR- -EHa- -nologo -Zi";
 default_compiler_sh = "g++";
 default_flags_sh  = "-g";
 
+// turn off animations:
+f4_battery_saver = true;
+
 // NOTE(rjf): Fleury 4coder Disabling Options
 // f4_disable_brace_highlight = true;
 // f4_disable_close_brace_annotation = true;
@@ -94,6 +97,6 @@ default_flags_sh  = "-g";
 // f4_disable_divider_comments = true;
 // f4_disable_error_annotations = true;
 // f4_disable_calc_comments = true;
-// f4_poscontext_draw_at_bottom_of_buffer = true;
+f4_poscontext_draw_at_bottom_of_buffer = true;
 // f4_disable_poscontext = true;
 // f4_disable_cursor_token_occurance = true;
