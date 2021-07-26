@@ -1,10 +1,13 @@
 
+#include "4coder_jason.cpp"
+
 struct Command_Map_ID_Pair
 {
 	Command_Map_ID From;
 	Command_Map_ID To;
 };
-static Command_Map_ID_Pair GlobalCommandMapReroute[4] = {};
+static Command_Map_ID_Pair GlobalInsertMapReroute[4] = {};
+static Command_Map_ID_Pair GlobalNotepadMapReroute[4] = {};
 
 CUSTOM_COMMAND_SIG(switch_to_keybinding_0)
 CUSTOM_DOC("Switch the keybindings to mode 0.")
@@ -42,16 +45,29 @@ F4_ImplicitMap(Application_Links *app, String_ID lang, String_ID mode, Input_Eve
 	if(GlobalKeybindingMode == KeyBindingMode_1)
 	{
 		for(int PairIndex = 0;
-			PairIndex < ArrayCount(GlobalCommandMapReroute);
+			PairIndex < ArrayCount(GlobalInsertMapReroute);
 			++PairIndex)
 		{
-			if(GlobalCommandMapReroute[PairIndex].From == map_id)
+			if(GlobalInsertMapReroute[PairIndex].From == map_id)
 			{
-				map_id = GlobalCommandMapReroute[PairIndex].To;
+				map_id = GlobalInsertMapReroute[PairIndex].To;
 				break;
 			}
 		}
 	}
+    else if(GlobalKeybindingMode == KeyBindingMode_2)
+    {
+        for(int PairIndex = 0;
+            PairIndex < ArrayCount(GlobalNotepadMapReroute);
+            ++PairIndex)
+        {
+            if(GlobalNotepadMapReroute[PairIndex].From == map_id)
+            {
+                map_id = GlobalNotepadMapReroute[PairIndex].To;
+                break;
+            }
+        }
+    }
 	
 	Command_Binding binding = map_get_binding_recursive(&framework_mapping, map_id, event);
     /*
@@ -81,45 +97,83 @@ F4_SetAbsolutelyNecessaryBindings(Mapping *mapping)
 	String_ID global_insert_map_id = vars_save_string_lit("keys_global_1");
 	String_ID file_insert_map_id = vars_save_string_lit("keys_file_1");
     String_ID code_insert_map_id = vars_save_string_lit("keys_code_1");
-
+    
+    String_ID global_notepad_map_id = vars_save_string_lit("keys_global_2");
+    String_ID file_notepad_map_id = vars_save_string_lit("keys_file_2");
+    String_ID code_notepad_map_id = vars_save_string_lit("keys_code_2");
+    
 	implicit_map_function = F4_ImplicitMap;
 	
 	MappingScope();
     SelectMapping(mapping);
+    
+    // Normal
     
     SelectMap(global_map_id);
     BindCore(fleury_startup, CoreCode_Startup);
     BindCore(default_try_exit, CoreCode_TryExit);
     BindMouseWheel(mouse_wheel_scroll);
     BindMouseWheel(mouse_wheel_change_face_size, KeyCode_Control);
-
+    
     SelectMap(file_map_id);
     ParentMap(global_map_id);
     BindMouse(click_set_cursor_and_mark, MouseCode_Left);
     BindMouseRelease(click_set_cursor, MouseCode_Left);
     BindCore(click_set_cursor_and_mark, CoreCode_ClickActivateView);
     BindMouseMove(click_set_cursor_if_lbutton);
-
+    Bind(jason_copy_line_range, KeyCode_L, KeyCode_Shift);
+    Bind(jason_delete_line_range, KeyCode_K, KeyCode_Shift);
+    Bind(jason_paste_new_line, KeyCode_P, KeyCode_Shift);
+    Bind(jason_switch_to_insert, KeyCode_I);
+    Bind(jason_switch_to_notepad, KeyCode_Tick, KeyCode_Control);
+    
     SelectMap(code_map_id);
     ParentMap(file_map_id);
-   
+    
+    // Insert
+    
     SelectMap(global_insert_map_id);
     ParentMap(global_map_id);
-    GlobalCommandMapReroute[0].From = global_map_id;
-    GlobalCommandMapReroute[0].To = global_insert_map_id;
+    GlobalInsertMapReroute[0].From = global_map_id;
+    GlobalInsertMapReroute[0].To = global_insert_map_id;
     
     SelectMap(file_insert_map_id);
     ParentMap(global_map_id);
-    GlobalCommandMapReroute[1].From = file_map_id;
-    GlobalCommandMapReroute[1].To = file_insert_map_id;
+    GlobalInsertMapReroute[1].From = file_map_id;
+    GlobalInsertMapReroute[1].To = file_insert_map_id;
     BindTextInput(fleury_write_text_input);
+    Bind(jason_switch_to_normal, KeyCode_Escape);
+    Bind(jason_switch_to_normal, KeyCode_Backspace, KeyCode_Shift);
     
     SelectMap(code_insert_map_id);
     ParentMap(file_insert_map_id);
-    GlobalCommandMapReroute[2].From = code_map_id;
-    GlobalCommandMapReroute[2].To = code_insert_map_id;
+    GlobalInsertMapReroute[2].From = code_map_id;
+    GlobalInsertMapReroute[2].To = code_insert_map_id;
     BindTextInput(fleury_write_text_and_auto_indent);
-   
+    
+    // Notepad
+    
+    SelectMap(global_notepad_map_id);
+    ParentMap(global_map_id);
+    GlobalNotepadMapReroute[0].From = global_map_id;
+    GlobalNotepadMapReroute[0].To = global_notepad_map_id;
+    
+    SelectMap(file_notepad_map_id);
+    ParentMap(global_notepad_map_id);
+    BindMouse(click_set_cursor_and_mark, MouseCode_Left);
+    BindMouseRelease(click_set_cursor, MouseCode_Left);
+    BindCore(click_set_cursor_and_mark, CoreCode_ClickActivateView);
+    BindMouseMove(click_set_cursor_if_lbutton);
+    Bind(jason_switch_to_normal, KeyCode_Tick, KeyCode_Control);
+    BindTextInput(fleury_write_text_input);
+    GlobalNotepadMapReroute[1].From = file_map_id;
+    GlobalNotepadMapReroute[1].To = file_notepad_map_id;
+    
+    SelectMap(code_notepad_map_id);
+    ParentMap(file_notepad_map_id);
+    BindTextInput(fleury_write_text_and_auto_indent);
+    GlobalNotepadMapReroute[2].From = code_map_id;
+    GlobalNotepadMapReroute[2].To = code_notepad_map_id;
 }
 
 function void
